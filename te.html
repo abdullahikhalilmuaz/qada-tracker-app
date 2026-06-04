@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button aria-label="open button" id="open" onclick="focusIt()">open</button>
+    <input type="text" id="name" placeholder="name" style="display: none" />
+
+    <div
+      style="padding: 100px; border: 1px solid red; display: none"
+      id="escapes"
+    >
+      Escape
+    </div>
+
+    <button onclick="escapes.style.display = 'block'" id="close-escape">
+      Open Escape
+    </button>
+
+    <script>
+      const focusIt = () => {
+        document.getElementById("name").style.display = "block";
+        document.getElementById("name").focus();
+      };
+
+      const openEscape = () => {
+        document.getElementById("close-escape").style.display = "block";
+      };
+
+      document.addEventListener("keydown", (e) => {
+        e === "keydown"
+          ? (document.getElementById("escapes").style.display = "none")
+          : "";
+      });
+    </script>
+  </body>
+</html>

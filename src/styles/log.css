@@ -1,0 +1,325 @@
+/* ===== Log Page ===== */
+.log-content {
+  --background: #080e1a;
+  --padding-bottom: 0 !important; /* remove Ionic's default tab padding */
+  --padding-top: 0;
+}
+
+.log-wrapper {
+  padding: 16px 16px 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: -apple-system, "SF Pro Display", "Segoe UI", sans-serif;
+}
+
+/* ── Header ── */
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 8px;
+  gap: 12px;
+}
+
+.log-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px;
+  letter-spacing: -0.5px;
+}
+
+.log-subtitle {
+  font-size: 13px;
+  color: #7a8899;
+  margin: 0;
+}
+
+.history-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #0d1526;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  color: #b0bec8;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 16px;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+/* ── Banner ── */
+.log-banner {
+  background: #0d1a30;
+  border: 1px solid rgba(74, 144, 217, 0.18);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.banner-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(74, 144, 217, 0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.banner-text {
+  flex: 1;
+}
+
+.banner-main {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #dde6f0;
+  margin: 0 0 3px;
+}
+
+.banner-sub {
+  font-size: 12.5px;
+  color: #4a90d9;
+  font-weight: 500;
+  margin: 0;
+}
+
+.banner-close {
+  background: none;
+  border: none;
+  color: #4a5a6e;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ── Section Header ── */
+.log-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.log-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.quick-select-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #4a90d9;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ── Prayer List ── */
+.prayer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prayer-row {
+  background: #0d1526;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.prayer-row-icon {
+  width: 44px;
+  height: 44px;
+  background: rgba(74, 144, 217, 0.1);
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.prayer-row-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.prayer-row-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.prayer-row-remaining {
+  font-size: 12px;
+  color: #7a8899;
+}
+
+/* ── +/- Controls ── */
+.prayer-row-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.ctrl-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.ctrl-btn:active {
+  opacity: 0.7;
+}
+
+.ctrl-btn.minus {
+  background: transparent;
+  border: 1.5px solid #2a3d5c;
+  color: #4a90d9;
+}
+
+.ctrl-btn.plus {
+  background: #4a90d9;
+  color: #ffffff;
+}
+
+.ctrl-count {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  min-width: 22px;
+  text-align: center;
+}
+
+.prayer-row-chevron {
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+/* ── Summary Card ── */
+.log-summary-card {
+  background: #0d1526;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 4px;
+}
+
+.summary-col {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.summary-col-icon {
+  width: 44px;
+  height: 44px;
+  background: rgba(74, 144, 217, 0.12);
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.summary-col-label {
+  font-size: 11px;
+  color: #7a8899;
+  margin: 0 0 2px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.summary-col-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+.summary-col-value.large {
+  font-size: 26px;
+}
+
+.summary-col-sub {
+  font-size: 11px;
+  color: #7a8899;
+  margin: 0;
+}
+
+.summary-divider {
+  width: 1px;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.07);
+  margin: 0 16px;
+  flex-shrink: 0;
+}
+
+/* ── Save Button ── */
+.save-btn {
+  width: 100%;
+  height: 56px;
+  background: linear-gradient(135deg, #3a7bd5 0%, #4a90d9 50%, #5ba0e8 100%);
+  border: none;
+  border-radius: 18px;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-top: 4px;
+  box-shadow: 0 6px 24px rgba(74, 144, 217, 0.4);
+  transition:
+    opacity 0.15s,
+    transform 0.1s;
+}
+
+.save-btn:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+.save-btn:not(:disabled):active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}

@@ -1,0 +1,437 @@
+/* ===== Alarms Page ===== */
+.alarms-content {
+  --background: #080e1a;
+  --padding-bottom: 0 !important; /* remove Ionic's default tab padding */
+  --padding-top: 0;
+}
+
+.alarms-wrapper {
+  padding: 16px 16px 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: -apple-system, "SF Pro Display", "Segoe UI", sans-serif;
+}
+
+/* ── Header ── */
+.alarms-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 8px;
+  gap: 12px;
+}
+
+.alarms-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px;
+  letter-spacing: -0.5px;
+}
+
+.alarms-subtitle {
+  font-size: 13px;
+  color: #7a8899;
+  margin: 0;
+}
+
+.add-alarm-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #0d1526;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  color: #b0bec8;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 16px;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+/* ── Next Alarm Banner ── */
+.next-alarm-card {
+  background: linear-gradient(135deg, #0d1a35 0%, #0a1628 100%);
+  border: 1px solid rgba(74, 144, 217, 0.15);
+  border-radius: 18px;
+  padding: 18px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.next-alarm-icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(74, 144, 217, 0.14);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.next-alarm-info {
+  flex: 1;
+}
+
+.next-alarm-label {
+  font-size: 11px;
+  color: #7a8899;
+  margin: 0 0 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+.next-alarm-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 2px;
+}
+
+.next-alarm-time {
+  font-size: 14px;
+  color: #4a90d9;
+  font-weight: 600;
+  margin: 0;
+}
+
+.next-alarm-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.next-alarm-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(74, 144, 217, 0.12);
+  border: 1px solid rgba(74, 144, 217, 0.22);
+  border-radius: 20px;
+  padding: 6px 11px;
+  font-size: 12px;
+  color: #4a90d9;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Section Header ── */
+.alarms-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.alarms-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.edit-btn {
+  background: none;
+  border: none;
+  color: #4a90d9;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ── Alarm List ── */
+.alarms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alarm-row {
+  background: #0d1526;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: opacity 0.2s;
+}
+
+.alarm-row-disabled {
+  opacity: 0.55;
+}
+
+.alarm-row-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.alarm-row-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.alarm-row-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.alarm-row-time {
+  font-size: 13px;
+  color: #4a90d9;
+  font-weight: 600;
+}
+
+.alarm-row-time-off {
+  color: #7a8899;
+}
+
+.alarm-row-repeat {
+  font-size: 11.5px;
+  color: #4a5a6e;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+.alarm-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ── Toggle ── */
+.toggle {
+  width: 48px;
+  height: 28px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.25s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.toggle-on {
+  background: #4a90d9;
+}
+
+.toggle-off {
+  background: #1e2d44;
+}
+
+.toggle-knob {
+  position: absolute;
+  top: 3px;
+  width: 22px;
+  height: 22px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-on .toggle-knob {
+  left: 23px;
+}
+
+.toggle-off .toggle-knob {
+  left: 3px;
+}
+
+.more-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Sheet Overlay ── */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+}
+
+/* ── Bottom Sheet ── */
+.add-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0d1526;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px 24px 0 0;
+  padding: 12px 20px 40px;
+  z-index: 100;
+  transform: translateY(100%);
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.add-sheet-open {
+  transform: translateY(0);
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  margin: 0 auto 4px;
+}
+
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sheet-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 3px;
+}
+
+.sheet-subtitle {
+  font-size: 13px;
+  color: #7a8899;
+  margin: 0;
+}
+
+.sheet-close {
+  width: 34px;
+  height: 34px;
+  background: #1a2540;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  color: #8a97a8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── Sheet Fields ── */
+.sheet-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.sheet-field {
+  background: #111e36;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sheet-field-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sheet-field-label {
+  font-size: 11px;
+  color: #7a8899;
+  margin: 0;
+  font-weight: 500;
+}
+
+.sheet-field-select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sheet-field-select {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  outline: none;
+}
+
+.sheet-field-select option {
+  background: #0d1526;
+  color: #ffffff;
+}
+
+.select-chevron {
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+}
+
+.sheet-time-input {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+  color-scheme: dark;
+}
+
+/* ── Save Alarm Button ── */
+.save-alarm-btn {
+  width: 100%;
+  height: 54px;
+  background: linear-gradient(135deg, #3a7bd5 0%, #4a90d9 50%, #5ba0e8 100%);
+  border: none;
+  border-radius: 18px;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(74, 144, 217, 0.4);
+  transition:
+    opacity 0.15s,
+    transform 0.1s;
+}
+
+.save-alarm-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}

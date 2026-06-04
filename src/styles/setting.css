@@ -1,0 +1,630 @@
+/* ===== Settings Page ===== */
+.settings-content {
+  --background: #080e1a;
+  --padding-bottom: 0 !important; /* remove Ionic's default tab padding */
+  --padding-top: 0;
+}
+
+.settings-wrapper {
+  padding: 16px 16px 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: -apple-system, "SF Pro Display", "Segoe UI", sans-serif;
+}
+
+/* ── Header ── */
+.settings-header {
+  padding-top: 8px;
+  margin-bottom: 8px;
+}
+
+.settings-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px;
+  letter-spacing: -0.5px;
+}
+
+.settings-subtitle {
+  font-size: 13px;
+  color: #7a8899;
+  margin: 0;
+}
+
+/* ── Section labels ── */
+.settings-section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a8899;
+  margin: 10px 0 6px 4px;
+  letter-spacing: 0.01em;
+}
+
+/* ── Card ── */
+.settings-card {
+  background: #0d1526;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+/* ── Divider ── */
+.settings-row-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 0 16px;
+}
+
+/* ── Base Row ── */
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.settings-row-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.settings-row-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.settings-row-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.settings-row-sub {
+  font-size: 12px;
+  color: #7a8899;
+  line-height: 1.4;
+  white-space: pre-line;
+}
+
+.settings-row-value {
+  font-size: 13px;
+  color: #4a90d9;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Qada Overview ── */
+.qada-overview-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+}
+
+.qada-overview-icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(155, 143, 232, 0.15);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.qada-overview-info {
+  flex: 1;
+}
+
+.qada-overview-label {
+  font-size: 11.5px;
+  color: #7a8899;
+  margin: 0 0 2px;
+  font-weight: 500;
+}
+
+.qada-overview-number {
+  font-size: 30px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.qada-overview-sub {
+  font-size: 12px;
+  color: #7a8899;
+  margin: 2px 0 0;
+}
+
+.qada-overview-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.recalc-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(74, 144, 217, 0.12);
+  border: 1px solid rgba(74, 144, 217, 0.25);
+  border-radius: 20px;
+  color: #4a90d9;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.recalc-btn:active {
+  opacity: 0.75;
+}
+
+.qada-last-calc {
+  font-size: 10.5px;
+  color: #4a5a6e;
+  margin: 0;
+  text-align: right;
+  line-height: 1.4;
+}
+
+/* ── Years counter ── */
+.years-counter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.years-btn {
+  width: 34px;
+  height: 34px;
+  background: #111e36;
+  border: 1px solid rgba(74, 144, 217, 0.25);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.years-btn:active {
+  background: #1a2d4a;
+}
+
+.years-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  min-width: 22px;
+  text-align: center;
+}
+
+/* ── Toggle ── */
+.s-toggle {
+  width: 50px;
+  height: 30px;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.25s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.s-toggle-on {
+  background: #4a90d9;
+}
+.s-toggle-off {
+  background: #1e2d44;
+}
+
+.s-toggle-knob {
+  position: absolute;
+  top: 4px;
+  width: 22px;
+  height: 22px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.s-toggle-on .s-toggle-knob {
+  left: 24px;
+}
+.s-toggle-off .s-toggle-knob {
+  left: 4px;
+}
+
+/* ══════════════════════════════════════════════════
+   BOTTOM SHEETS — shared infrastructure
+══════════════════════════════════════════════════ */
+
+/* Overlay */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 199;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+/* Sheet container */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0f1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: none;
+  border-radius: 24px 24px 0 0;
+  z-index: 200;
+  transform: translateY(100%);
+  transition: transform 0.34s cubic-bezier(0.32, 0.72, 0, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.bottom-sheet-open {
+  transform: translateY(0);
+}
+
+/* Drag handle bar — larger touch target */
+.sheet-handle-bar {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 4px;
+  cursor: grab;
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 2px;
+}
+
+/* Sheet inner content */
+.sheet-content {
+  padding: 8px 20px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sheet-content-center {
+  align-items: center;
+  text-align: center;
+}
+
+.sheet-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+}
+
+.sheet-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a8899;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.sheet-desc {
+  font-size: 14px;
+  color: #7a8899;
+  margin: 0;
+  line-height: 1.6;
+  white-space: pre-line;
+  text-align: center;
+}
+
+/* Shared buttons */
+.sheet-primary-btn {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  transition:
+    opacity 0.15s,
+    transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sheet-primary-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.green-btn {
+  background: linear-gradient(135deg, #2d8a5e 0%, #38b074 100%);
+  box-shadow: 0 4px 18px rgba(56, 176, 116, 0.35);
+}
+
+.red-btn {
+  background: linear-gradient(135deg, #c93030 0%, #e84040 100%);
+  box-shadow: 0 4px 18px rgba(232, 64, 64, 0.35);
+}
+
+.sheet-cancel-btn {
+  width: 100%;
+  height: 48px;
+  background: #1a2540;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  color: #8a97a8;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sheet-cancel-btn:active {
+  background: #1f2e4a;
+}
+
+/* ── Sheet 8: Recalc counter ── */
+.recalc-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 8px 0;
+}
+
+.recalc-counter-btn {
+  width: 44px;
+  height: 44px;
+  background: #1a2540;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #4a90d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 22px;
+  transition: background 0.15s;
+}
+
+.recalc-counter-btn:active {
+  background: #1f2e4a;
+}
+
+.recalc-counter-value {
+  font-size: 42px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -1px;
+  min-width: 56px;
+  text-align: center;
+}
+
+.recalc-note {
+  background: #1a2540;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #7a8899;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ── Sheet 9: Sound options ── */
+.sound-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: #1a2540;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.sound-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #dde6f0;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+}
+
+.sound-option:last-child {
+  border-bottom: none;
+}
+.sound-option:active {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sound-radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #2a3a50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+
+.sound-radio-on {
+  border-color: #38b074;
+  background: rgba(56, 176, 116, 0.12);
+}
+.sound-radio-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #38b074;
+}
+
+/* ── Sheet 10: Volume slider ── */
+.volume-icon-row {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.volume-slider-wrap {
+  padding: 8px 4px;
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #38b074 0%, #38b074 75%, #1a2540 75%);
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  cursor: grab;
+}
+
+.volume-pct {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* ── Data sheet icons ── */
+.data-sheet-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.green-icon {
+  background: rgba(80, 200, 136, 0.15);
+}
+.blue-icon {
+  background: rgba(74, 144, 217, 0.15);
+}
+.red-icon {
+  background: rgba(240, 96, 96, 0.15);
+}
+
+.red-title {
+  color: #f06060 !important;
+}
+
+/* ── Reset actions row ── */
+.reset-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.reset-actions .reset-cancel {
+  flex: 1;
+  width: auto;
+  background: #1a2540;
+}
+
+.reset-actions .red-btn {
+  flex: 1.6;
+  width: auto;
+  height: 48px;
+  font-size: 14px;
+}
+
+/* ── About sheet ── */
+.about-app-icon {
+  width: 80px;
+  height: 80px;
+  background: rgba(56, 176, 116, 0.15);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.about-version {
+  font-size: 13px;
+  color: #4a5a6e;
+  margin: 0;
+  text-align: center;
+}
+
+.about-list {
+  width: 100%;
+  background: #1a2540;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.about-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #dde6f0;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.about-list-row:last-child {
+  border-bottom: none;
+}

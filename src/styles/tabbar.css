@@ -1,0 +1,101 @@
+/* ===== Global App Background ===== */
+:root {
+  --app-bg: #080e1a;
+  --card-bg: #0d1526;
+  --card-border: rgba(255, 255, 255, 0.06);
+  --accent-blue: #4a90d9;
+  --accent-blue-glow: rgba(74, 144, 217, 0.3);
+  --text-primary: #ffffff;
+  --text-secondary: #8a97a8;
+  --tab-bg: #0b1120;
+  --tab-border: rgba(255, 255, 255, 0.08);
+  --tab-selected: #4a90d9;
+  --tab-unselected: #4a5568;
+}
+
+ion-router-outlet {
+  margin-bottom: 80px;
+}
+
+/* ── The bar itself ── */
+.qada-tab-bar {
+  position: fixed;
+  background: #0b1120;
+  /* background: #fff; */
+  --border: none;
+  bottom: 5px;
+  right: 10px;
+  left: 10px;
+  height: 60px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  --color: #4a5a70;
+}
+
+/* ── Each button ── */
+.qada-tab-bar ion-tab-button {
+  --background: transparent;
+  --background-focused: transparent;
+  --color: #4a5a70;
+  --color-selected: #4a90d9;
+  --ripple-color: transparent;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 0 4px;
+  border-radius: 0;
+  transition: color 0.2s;
+}
+
+/* ── Icon sizing ── */
+.qada-tab-bar ion-tab-button ion-icon {
+  font-size: 23px;
+  transition:
+    color 0.2s,
+    transform 0.18s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+/* ── Label ── */
+.qada-tab-bar ion-tab-button ion-label {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-family: -apple-system, "SF Pro Text", "Segoe UI", sans-serif;
+  margin: 0;
+  transition: color 0.2s;
+}
+
+/* ── Active state ── */
+.qada-tab-bar ion-tab-button.tab-selected ion-icon {
+  transform: translateY(-1px);
+  color: #4a90d9;
+}
+
+/* ── Active blue dot indicator above icon ── */
+.qada-tab-bar ion-tab-button.tab-selected::before {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 3px;
+  background: #4a90d9;
+  border-radius: 0 0 3px 3px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px rgba(74, 144, 217, 0.6);
+}
+
+.qada-tab-bar ion-tab-button {
+  position: relative;
+}
