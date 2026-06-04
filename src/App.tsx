@@ -3,7 +3,6 @@ import {
   IonTabBar,
   IonTabButton,
   IonIcon,
-  IonLabel,
   IonRouterOutlet,
 } from "@ionic/react";
 import { Route, Redirect, BrowserRouter } from "react-router-dom";

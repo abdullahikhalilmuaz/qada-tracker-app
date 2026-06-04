@@ -4,7 +4,7 @@ import "../styles/stats.css";
 
 // ── Prayer Icons ──────────────────────────────────────────────────────────────
 const PrayerIcon = ({ name }: { name: string }) => {
-  const icons: Record<string, JSX.Element> = {
+  const icons: Record<string, React.ReactNode> = {
     Fajr: (
       <svg width="20" height="20" viewBox="0 0 26 26" fill="none">
         <path
