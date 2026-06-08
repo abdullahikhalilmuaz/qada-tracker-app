@@ -396,9 +396,10 @@ export default function Alarms() {
     ]);
 
     await AlarmPlugin.schedule({
-      id, prayer: newPrayer, time: newTime, repeat: newRepeat,
-      enabled: true
-    })
+      id,
+      timeMillis: date.getTime(), // <-- send millis directly
+      prayer: newPrayer,
+    });
 
     setSheetOpen(false);
   };
