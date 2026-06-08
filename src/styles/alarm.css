@@ -1,7 +1,7 @@
 /* ===== Alarms Page ===== */
 .alarms-content {
   --background: #080e1a;
-  --padding-bottom: 0 !important; /* remove Ionic's default tab padding */
+  --padding-bottom: 0 !important;
   --padding-top: 0;
 }
 
@@ -274,7 +274,7 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
   z-index: 99;
-  backdrop-filter: blur(2px);
+  /* ↓ REMOVED: backdrop-filter: blur(2px); */
 }
 
 /* ── Bottom Sheet ── */
@@ -287,7 +287,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px 24px 0 0;
   padding: 12px 20px 40px;
-  z-index: 100;
+  z-index: 200; /* ↑ CHANGED: was 100, now above overlay */
   transform: translateY(100%);
   transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -426,12 +426,86 @@
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 6px 24px rgba(74, 144, 217, 0.4);
-  transition:
-    opacity 0.15s,
-    transform 0.1s;
+  transition: opacity 0.15s, transform 0.1s;
 }
 
 .save-alarm-btn:active {
   transform: scale(0.98);
   opacity: 0.9;
+}
+
+/* alarm stuff */
+
+/* ── Alarm Alert Overlay ── */
+.alarm-alert-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.alarm-alert-card {
+  background: #0d1526;
+  border: 1px solid rgba(74, 144, 217, 0.25);
+  border-radius: 28px;
+  padding: 36px 28px 28px;
+  width: calc(100% - 48px);
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+.alarm-alert-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.alarm-alert-label {
+  font-size: 12px;
+  color: #7a8899;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  margin: 0;
+}
+
+.alarm-alert-prayer {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.alarm-alert-time {
+  font-size: 16px;
+  color: #4a90d9;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.alarm-alert-dismiss {
+  width: 100%;
+  height: 52px;
+  background: linear-gradient(135deg, #3a7bd5 0%, #4a90d9 50%, #5ba0e8 100%);
+  border: none;
+  border-radius: 16px;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(74, 144, 217, 0.4);
+  margin-top: 4px;
 }

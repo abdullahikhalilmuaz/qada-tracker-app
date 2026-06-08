@@ -1,6 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IonContent, IonPage } from "@ionic/react";
+import { loadAlarms, saveAlarms } from "../data/alarmStorage";
 import "../styles/alarm.css";
+import { registerPlugin } from "@capacitor/core";
+
+interface AlarmPluginInterface {
+  schedule(option: {
+    id: number;
+    timeMillis: number;
+    prayer: string;
+  }): Promise<void>;
+}
+
+const AlarmPlugin = registerPlugin<AlarmPluginInterface>("AlarmPlugin");
+const formatTime = (h: number, m: number) => {
+  const ampm = h >= 12 ? "PM" : "AM";
+  const displayH = h % 12 === 0 ? 12 : h % 12;
+
+  return `${String(displayH).padStart(2, "0")} : ${String(m).padStart(2, "0")} 
+  ${ampm}`;
+};
 
 // ── Prayer Icons ──────────────────────────────────────────────────────────────
 const PrayerIcon = ({ name, size = 26 }: { name: string; size?: number }) => {
@@ -273,43 +292,129 @@ const Toggle = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
   </button>
 );
 
+// ── Alarm Alert component ─────────────────────────────────────────────────────
+const AlarmAlert = ({
+  prayer,
+  time,
+  onDismiss,
+}: {
+  prayer: string;
+  time: string;
+  onDismiss: () => void;
+}) => (
+  <div className="alarm-alert-overlay">
+    <div className="alarm-alert-card">
+      <div className="alarm-alert-icon" style={{ background: iconBg[prayer] }}>
+        <PrayerIcon name={prayer} size={40} />
+      </div>
+      <p className="alarm-alert-label">Time for Qada</p>
+      <p className="alarm-alert-prayer">{prayer} Qada</p>
+      <p className="alarm-alert-time">{time}</p>
+      <button className="alarm-alert-dismiss" onClick={onDismiss}>
+        Dismiss
+      </button>
+    </div>
+  </div>
+);
+
 // ── Main component ────────────────────────────────────────────────────────────
 export default function Alarms() {
-  const [alarms, setAlarms] = useState(DEFAULT_ALARMS);
+  const [alarms, setAlarms] = useState(() => {
+    const saved = loadAlarms();
+    return saved.length ? saved : DEFAULT_ALARMS;
+  });
   const [sheetOpen, setSheetOpen] = useState(false);
   const [newPrayer, setNewPrayer] = useState("Fajr");
   const [newTime, setNewTime] = useState("04:30");
   const [newRepeat, setNewRepeat] = useState("Every day");
+  const [lastTriggered, setLastTriggered] = useState<number | null>(null);
+
+  // ── NEW: fired alarm state ────────────────────────────────────────────────
+  const [firedAlarm, setFiredAlarm] = useState<{
+    prayer: string;
+    time: string;
+  } | null>(null);
 
   const nextAlarm = alarms.find((a) => a.enabled) ?? alarms[0];
+
+  useEffect(() => {
+    saveAlarms(alarms);
+  }, [alarms]);
 
   const toggleAlarm = (id: number) =>
     setAlarms((prev) =>
       prev.map((a) => (a.id === id ? { ...a, enabled: !a.enabled } : a)),
     );
 
-  const saveAlarm = () => {
-    const [hh, mm] = newTime.split(":");
-    const h = parseInt(hh, 10);
-    const ampm = h >= 12 ? "PM" : "AM";
-    const displayH = h % 12 === 0 ? 12 : h % 12;
-    const timeStr = `${String(displayH).padStart(2, "0")}:${mm} ${ampm}`;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+
+      const current = now.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+      alarms.forEach((alarm) => {
+        if (!alarm.enabled) return;
+
+        if (alarm.time === current && lastTriggered !== alarm.id) {
+          console.log("ALARM FIRED:", alarm.prayer, alarm.time);
+
+          setFiredAlarm({
+            prayer: alarm.prayer,
+            time: alarm.time,
+          });
+
+          setLastTriggered(alarm.id);
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [alarms, lastTriggered]);
+
+  const saveAlarm = async () => {
+    const [h, m] = newTime.split(":").map(Number);
+
+    const date = new Date();
+    date.setHours(h, m, 0, 0);
+
+    const id = Date.now();
+
     setAlarms((prev) => [
       ...prev,
       {
-        id: Date.now(),
+        id,
         prayer: newPrayer,
-        time: timeStr,
+        time: formatTime(h, m),
+        timestamp: date.getTime(),
         repeat: newRepeat,
         enabled: true,
       },
     ]);
+
+    await AlarmPlugin.schedule({
+      id, prayer: newPrayer, time: newTime, repeat: newRepeat,
+      enabled: true
+    })
+
     setSheetOpen(false);
   };
 
   return (
     <IonPage>
       <IonContent fullscreen className="alarms-content">
+        {/* ── Alarm Alert Overlay ── */}
+        {firedAlarm && (
+          <AlarmAlert
+            prayer={firedAlarm.prayer}
+            time={firedAlarm.time}
+            onDismiss={() => setFiredAlarm(null)}
+          />
+        )}
+
         <div className="alarms-wrapper">
           {/* ── Header ── */}
           <div className="alarms-header">
@@ -474,7 +579,10 @@ export default function Alarms() {
         )}
 
         {/* ── Add Alarm Bottom Sheet ── */}
-        <div className={`add-sheet ${sheetOpen ? "add-sheet-open" : ""}`}>
+        <div
+          className={`add-sheet ${sheetOpen ? "add-sheet-open" : ""}`}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="sheet-handle" />
           <div className="sheet-header">
             <div>
@@ -498,7 +606,6 @@ export default function Alarms() {
           </div>
 
           <div className="sheet-fields">
-            {/* Prayer picker */}
             <div className="sheet-field">
               <PrayerIcon name={newPrayer} size={20} />
               <div className="sheet-field-content">
@@ -529,7 +636,6 @@ export default function Alarms() {
               </div>
             </div>
 
-            {/* Time picker */}
             <div className="sheet-field">
               <svg
                 width="20"
@@ -554,7 +660,6 @@ export default function Alarms() {
               </div>
             </div>
 
-            {/* Repeat picker */}
             <div className="sheet-field">
               <svg
                 width="20"

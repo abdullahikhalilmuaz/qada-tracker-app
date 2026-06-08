@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { IonContent, IonPage } from "@ionic/react";
 import "./../styles/log.css";
+import { loadData, saveData } from "../data/storage";
 
 // ── Prayer Icons (same as Home) ──────────────────────────────────────────────
 const PrayerIcon = ({ name }: { name: string }) => {
@@ -211,26 +212,35 @@ const PrayerIcon = ({ name }: { name: string }) => {
   return icons[name] ?? null;
 };
 
-// ── Data ─────────────────────────────────────────────────────────────────────
-const INITIAL_PRAYERS = [
-  { name: "Fajr", remaining: 1899 },
-  { name: "Zuhr", remaining: 1899 },
-  { name: "Asr", remaining: 1899 },
-  { name: "Maghrib", remaining: 1899 },
-  { name: "Isha", remaining: 1899 },
-];
-
-const TOTAL_REMAINING = 9497;
-
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function Log() {
-  const [counts, setCounts] = useState<Record<string, number>>(
-    Object.fromEntries(INITIAL_PRAYERS.map((p) => [p.name, 0])),
-  );
+  const [appData, setAppData] = useState(loadData());
+  const prayers = [
+    { name: "Fajr", key: "fajr", remaining: appData.prayers.fajr },
+    { name: "Zuhr", key: "zuhr", remaining: appData.prayers.zuhr },
+    { name: "Asr", key: "asr", remaining: appData.prayers.asr },
+    { name: "Maghrib", key: "maghrib", remaining: appData.prayers.maghrib },
+    { name: "Isha", key: "isha", remaining: appData.prayers.isha },
+  ];
+
+  const [counts, setCounts] = useState<Record<string, number>>({
+    Fajr: 0,
+    Zuhr: 0,
+    Asr: 0,
+    Maghrib: 0,
+    Isha: 0,
+  });
   const [bannerOpen, setBannerOpen] = useState(true);
 
   const totalAdded = Object.values(counts).reduce((a, b) => a + b, 0);
-  const afterUpdate = TOTAL_REMAINING - totalAdded;
+  const currentTotal =
+    appData.prayers.fajr +
+    appData.prayers.zuhr +
+    appData.prayers.asr +
+    appData.prayers.maghrib +
+    appData.prayers.isha;
+
+  const afterUpdate = currentTotal - totalAdded;
 
   const increment = (name: string) =>
     setCounts((c) => ({ ...c, [name]: c[name] + 1 }));
@@ -323,7 +333,7 @@ export default function Log() {
           </div>
 
           <div className="prayer-list">
-            {INITIAL_PRAYERS.map((p) => (
+            {prayers.map((p) => (
               <div className="prayer-row" key={p.name}>
                 <div className="prayer-row-icon">
                   <PrayerIcon name={p.name} />
@@ -441,7 +451,37 @@ export default function Log() {
           </div>
 
           {/* ── Save Button ── */}
-          <button className="save-btn" disabled={totalAdded === 0}>
+          <button
+            className="save-btn"
+            disabled={totalAdded === 0}
+            onClick={() => {
+              const updated = {
+                ...appData,
+                prayers: {
+                  fajr: appData.prayers.fajr - counts.Fajr,
+                  zuhr: appData.prayers.zuhr - counts.Zuhr,
+                  asr: appData.prayers.asr - counts.Asr,
+                  maghrib: appData.prayers.maghrib - counts.Maghrib,
+                  isha: appData.prayers.isha - counts.Isha,
+                },
+                completedToday: appData.completedToday + totalAdded,
+                completedTotal: appData.completedTotal + totalAdded,
+              };
+
+              saveData(updated);
+              setAppData(updated);
+
+              setCounts({
+                Fajr: 0,
+                Zuhr: 0,
+                Asr: 0,
+                Maghrib: 0,
+                Isha: 0,
+              });
+
+              alert("Qada prayers saved!");
+            }}
+          >
             <svg
               width="20"
               height="20"
