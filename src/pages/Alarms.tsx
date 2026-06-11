@@ -332,7 +332,7 @@ export default function Alarms() {
   const [newPrayer, setNewPrayer] = useState("Fajr");
   const [newTime, setNewTime] = useState("04:30");
   const [newRepeat, setNewRepeat] = useState("Every day");
-  // const [editingId, setEditingId]   = useState<number | null>(null);
+  const [editingId, setEditingId]   = useState<number | null>(null);
 
   // ── Persist & sync to native on every change ──────────────────────────────
   useEffect(() => {
