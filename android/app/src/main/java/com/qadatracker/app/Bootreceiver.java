@@ -18,6 +18,7 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (!Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) return;
 
+
         // Read alarms from SharedPreferences (written by AlarmStorageBridge)
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         String alarmsJson = prefs.getString(ALARMS_KEY, "[]");

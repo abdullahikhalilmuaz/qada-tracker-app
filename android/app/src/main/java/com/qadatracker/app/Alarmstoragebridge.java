@@ -18,6 +18,7 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 @CapacitorPlugin(name = "AlarmStorageBridge")
 public class AlarmStorageBridge extends Plugin {
 
+
     private static final String PREFS_NAME = "qada_alarms_prefs";
     private static final String ALARMS_KEY = "qada_alarms";
 
