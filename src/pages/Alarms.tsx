@@ -4,22 +4,48 @@ import { loadAlarms, saveAlarms } from "../data/alarmStorage";
 import "../styles/alarm.css";
 import { registerPlugin } from "@capacitor/core";
 
+// ── Native plugin interfaces ──────────────────────────────────────────────────
 interface AlarmPluginInterface {
-  schedule(option: {
+  schedule(options: {
     id: number;
     timeMillis: number;
     prayer: string;
   }): Promise<void>;
+  cancel(options: { id: number }): Promise<void>;
+}
+
+interface AlarmStorageBridgeInterface {
+  sync(options: { alarms: string }): Promise<void>;
 }
 
 const AlarmPlugin = registerPlugin<AlarmPluginInterface>("AlarmPlugin");
+const AlarmStorageBridge =
+  registerPlugin<AlarmStorageBridgeInterface>("AlarmStorageBridge");
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
 const formatTime = (h: number, m: number) => {
   const ampm = h >= 12 ? "PM" : "AM";
   const displayH = h % 12 === 0 ? 12 : h % 12;
-
-  return `${String(displayH).padStart(2, "0")} : ${String(m).padStart(2, "0")} 
-  ${ampm}`;
+  return `${String(displayH).padStart(2, "0")}:${String(m).padStart(
+    2,
+    "0",
+  )} ${ampm}`;
 };
+
+/**
+ * Given an HH:MM string, return the next future epoch ms for that time.
+ * If the time has already passed today, returns tomorrow's epoch.
+ */
+function nextOccurrenceMs(hhmm: string): number {
+  const [h, m] = hhmm.split(":").map(Number);
+  const now = new Date();
+  const target = new Date();
+  target.setHours(h, m, 0, 0);
+  if (target.getTime() <= now.getTime()) {
+    target.setDate(target.getDate() + 1);
+  }
+  return target.getTime();
+}
 
 // ── Prayer Icons ──────────────────────────────────────────────────────────────
 const PrayerIcon = ({ name, size = 26 }: { name: string; size?: number }) => {
@@ -228,10 +254,10 @@ const PrayerIcon = ({ name, size = 26 }: { name: string; size?: number }) => {
       </svg>
     ),
   };
-  return icons[name] ?? null;
+  return <>{icons[name] ?? null}</>;
 };
 
-// ── Icon background tints ─────────────────────────────────────────────────────
+// ── Constants ─────────────────────────────────────────────────────────────────
 const iconBg: Record<string, string> = {
   Fajr: "rgba(74,144,217,0.15)",
   Zuhr: "rgba(245,200,66,0.15)",
@@ -240,7 +266,6 @@ const iconBg: Record<string, string> = {
   Isha: "rgba(155,143,232,0.15)",
 };
 
-// ── Data ──────────────────────────────────────────────────────────────────────
 const DEFAULT_ALARMS = [
   {
     id: 1,
@@ -248,6 +273,7 @@ const DEFAULT_ALARMS = [
     time: "04:30 AM",
     repeat: "Every day",
     enabled: true,
+    timestamp: nextOccurrenceMs("04:30"),
   },
   {
     id: 2,
@@ -255,6 +281,7 @@ const DEFAULT_ALARMS = [
     time: "01:00 PM",
     repeat: "Every day",
     enabled: true,
+    timestamp: nextOccurrenceMs("13:00"),
   },
   {
     id: 3,
@@ -262,6 +289,7 @@ const DEFAULT_ALARMS = [
     time: "04:45 PM",
     repeat: "Every day",
     enabled: true,
+    timestamp: nextOccurrenceMs("16:45"),
   },
   {
     id: 4,
@@ -269,6 +297,7 @@ const DEFAULT_ALARMS = [
     time: "07:15 PM",
     repeat: "Every day",
     enabled: false,
+    timestamp: nextOccurrenceMs("19:15"),
   },
   {
     id: 5,
@@ -276,12 +305,13 @@ const DEFAULT_ALARMS = [
     time: "09:00 PM",
     repeat: "Every day",
     enabled: true,
+    timestamp: nextOccurrenceMs("21:00"),
   },
 ];
 
 const PRAYERS = ["Fajr", "Zuhr", "Asr", "Maghrib", "Isha"];
 
-// ── Toggle component ──────────────────────────────────────────────────────────
+// ── Toggle ────────────────────────────────────────────────────────────────────
 const Toggle = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
   <button
     className={`toggle ${on ? "toggle-on" : "toggle-off"}`}
@@ -290,31 +320,6 @@ const Toggle = ({ on, onChange }: { on: boolean; onChange: () => void }) => (
   >
     <span className="toggle-knob" />
   </button>
-);
-
-// ── Alarm Alert component ─────────────────────────────────────────────────────
-const AlarmAlert = ({
-  prayer,
-  time,
-  onDismiss,
-}: {
-  prayer: string;
-  time: string;
-  onDismiss: () => void;
-}) => (
-  <div className="alarm-alert-overlay">
-    <div className="alarm-alert-card">
-      <div className="alarm-alert-icon" style={{ background: iconBg[prayer] }}>
-        <PrayerIcon name={prayer} size={40} />
-      </div>
-      <p className="alarm-alert-label">Time for Qada</p>
-      <p className="alarm-alert-prayer">{prayer} Qada</p>
-      <p className="alarm-alert-time">{time}</p>
-      <button className="alarm-alert-dismiss" onClick={onDismiss}>
-        Dismiss
-      </button>
-    </div>
-  </div>
 );
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -327,79 +332,69 @@ export default function Alarms() {
   const [newPrayer, setNewPrayer] = useState("Fajr");
   const [newTime, setNewTime] = useState("04:30");
   const [newRepeat, setNewRepeat] = useState("Every day");
-  const [lastTriggered, setLastTriggered] = useState<number | null>(null);
+  // const [editingId, setEditingId]   = useState<number | null>(null);
 
-  // ── NEW: fired alarm state ────────────────────────────────────────────────
-  const [firedAlarm, setFiredAlarm] = useState<{
-    prayer: string;
-    time: string;
-  } | null>(null);
-
-  const nextAlarm = alarms.find((a) => a.enabled) ?? alarms[0];
-
+  // ── Persist & sync to native on every change ──────────────────────────────
   useEffect(() => {
     saveAlarms(alarms);
+    // Sync to SharedPreferences so BootReceiver can restore after reboot
+    AlarmStorageBridge.sync({ alarms: JSON.stringify(alarms) }).catch(() => {});
   }, [alarms]);
 
-  const toggleAlarm = (id: number) =>
+  // ── Next enabled alarm ────────────────────────────────────────────────────
+  const nextAlarm = alarms.find((a) => a.enabled) ?? alarms[0];
+
+  // ── Toggle enable/disable ─────────────────────────────────────────────────
+  const toggleAlarm = async (id: number) => {
+    const alarm = alarms.find((a) => a.id === id);
+    if (!alarm) return;
+
+    if (alarm.enabled) {
+      // Disabling → cancel the native alarm
+      await AlarmPlugin.cancel({ id }).catch(() => {});
+    } else {
+      // Re-enabling → reschedule from its timestamp
+      const ts = nextOccurrenceMs(rawHHMM(alarm.time));
+      await AlarmPlugin.schedule({
+        id,
+        timeMillis: ts,
+        prayer: alarm.prayer,
+      }).catch(() => {});
+    }
+
     setAlarms((prev) =>
       prev.map((a) => (a.id === id ? { ...a, enabled: !a.enabled } : a)),
     );
+  };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
+  // ── Delete alarm ──────────────────────────────────────────────────────────
+  const deleteAlarm = async (id: number) => {
+    await AlarmPlugin.cancel({ id }).catch(() => {});
+    setAlarms((prev) => prev.filter((a) => a.id !== id));
+  };
 
-      const current = now.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
-
-      alarms.forEach((alarm) => {
-        if (!alarm.enabled) return;
-
-        if (alarm.time === current && lastTriggered !== alarm.id) {
-          console.log("ALARM FIRED:", alarm.prayer, alarm.time);
-
-          setFiredAlarm({
-            prayer: alarm.prayer,
-            time: alarm.time,
-          });
-
-          setLastTriggered(alarm.id);
-        }
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [alarms, lastTriggered]);
-
+  // ── Save new alarm ────────────────────────────────────────────────────────
   const saveAlarm = async () => {
+    const timeMs = nextOccurrenceMs(newTime);
     const [h, m] = newTime.split(":").map(Number);
-
-    const date = new Date();
-    date.setHours(h, m, 0, 0);
-
     const id = Date.now();
 
-    setAlarms((prev) => [
-      ...prev,
-      {
-        id,
-        prayer: newPrayer,
-        time: formatTime(h, m),
-        timestamp: date.getTime(),
-        repeat: newRepeat,
-        enabled: true,
-      },
-    ]);
+    const newAlarm = {
+      id,
+      prayer: newPrayer,
+      time: formatTime(h, m),
+      timestamp: timeMs,
+      repeat: newRepeat,
+      enabled: true,
+    };
+
+    setAlarms((prev) => [...prev, newAlarm]);
 
     await AlarmPlugin.schedule({
       id,
-      timeMillis: date.getTime(), // <-- send millis directly
+      timeMillis: timeMs,
       prayer: newPrayer,
-    });
+    }).catch(() => {});
 
     setSheetOpen(false);
   };
@@ -407,15 +402,6 @@ export default function Alarms() {
   return (
     <IonPage>
       <IonContent fullscreen className="alarms-content">
-        {/* ── Alarm Alert Overlay ── */}
-        {firedAlarm && (
-          <AlarmAlert
-            prayer={firedAlarm.prayer}
-            time={firedAlarm.time}
-            onDismiss={() => setFiredAlarm(null)}
-          />
-        )}
-
         <div className="alarms-wrapper">
           {/* ── Header ── */}
           <div className="alarms-header">
@@ -447,63 +433,34 @@ export default function Alarms() {
           </div>
 
           {/* ── Next Alarm Banner ── */}
-          <div className="next-alarm-card">
-            <div className="next-alarm-icon">
-              <svg
-                width="26"
-                height="26"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#4a90d9"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                <line x1="19" y1="4" x2="21" y2="2" />
-                <line x1="5" y1="4" x2="3" y2="2" />
-              </svg>
-            </div>
-            <div className="next-alarm-info">
-              <p className="next-alarm-label">Next Alarm</p>
-              <p className="next-alarm-name">{nextAlarm.prayer} Qada</p>
-              <p className="next-alarm-time">{nextAlarm.time}</p>
-            </div>
-            <div className="next-alarm-right">
-              <span className="next-alarm-badge">
+          {nextAlarm && (
+            <div className="next-alarm-card">
+              <div className="next-alarm-icon">
                 <svg
-                  width="13"
-                  height="13"
+                  width="26"
+                  height="26"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#4a90d9"
-                  strokeWidth="2"
+                  strokeWidth="1.8"
                   strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <circle cx="12" cy="12" r="9" />
-                  <polyline points="12 7 12 12 15 15" />
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
-                In 7h 48m
-              </span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#3a4a5e"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
+              </div>
+              <div className="next-alarm-info">
+                <p className="next-alarm-label">Next Alarm</p>
+                <p className="next-alarm-name">{nextAlarm.prayer} Qada</p>
+                <p className="next-alarm-time">{nextAlarm.time}</p>
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* ── Your Alarms ── */}
+          {/* ── Alarm List ── */}
           <div className="alarms-section-header">
             <span className="alarms-section-title">Your Alarms</span>
-            <button className="edit-btn">Edit</button>
           </div>
 
           <div className="alarms-list">
@@ -553,19 +510,24 @@ export default function Alarms() {
                     on={alarm.enabled}
                     onChange={() => toggleAlarm(alarm.id)}
                   />
-                  <button className="more-btn">
+                  <button
+                    className="more-btn delete-btn"
+                    onClick={() => deleteAlarm(alarm.id)}
+                    aria-label="Delete alarm"
+                  >
                     <svg
-                      width="18"
-                      height="18"
+                      width="16"
+                      height="16"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#3a4a5e"
-                      strokeWidth="2.5"
+                      stroke="#e05a5a"
+                      strokeWidth="2"
                       strokeLinecap="round"
                     >
-                      <circle cx="12" cy="5" r="1" fill="#3a4a5e" />
-                      <circle cx="12" cy="12" r="1" fill="#3a4a5e" />
-                      <circle cx="12" cy="19" r="1" fill="#3a4a5e" />
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6l-1 14H6L5 6" />
+                      <path d="M10 11v6M14 11v6" />
+                      <path d="M9 6V4h6v2" />
                     </svg>
                   </button>
                 </div>
@@ -714,4 +676,15 @@ export default function Alarms() {
       </IonContent>
     </IonPage>
   );
+}
+
+// ── Utility: convert displayed time "04:30 AM" → "04:30" (HH:MM 24h) ────────
+function rawHHMM(displayTime: string): string {
+  const parts = displayTime.trim().split(/[\s:]+/);
+  let h = parseInt(parts[0], 10);
+  const m = parts[1];
+  const ampm = parts[2]?.toUpperCase();
+  if (ampm === "PM" && h !== 12) h += 12;
+  if (ampm === "AM" && h === 12) h = 0;
+  return `${String(h).padStart(2, "0")}:${m}`;
 }
